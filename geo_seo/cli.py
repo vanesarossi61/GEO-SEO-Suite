@@ -55,7 +55,7 @@ def analyze(
         Path | None,
         typer.Option("--config", "-c", help="Path to config YAML file"),
     ] = None,
-    output: Annotated[
+    output: Annotated[  # noqa: ARG001
         Path | None,
         typer.Option("--output", "-o", help="Output file path"),
     ] = None,
@@ -137,11 +137,11 @@ def compare(
         list[str],
         typer.Argument(help="URLs to compare (space-separated)"),
     ],
-    config: Annotated[
+    config: Annotated[  # noqa: ARG001
         Path | None,
         typer.Option("--config", "-c", help="Path to config YAML file"),
     ] = None,
-    output: Annotated[
+    output: Annotated[  # noqa: ARG001
         Path | None,
         typer.Option("--output", "-o", help="Output file path"),
     ] = None,
@@ -164,7 +164,7 @@ def compare(
 def serve(
     host: Annotated[
         str, typer.Option("--host", "-h", help="API server host")
-    ] = "0.0.0.0",
+    ] = "0.0.0.0",  # noqa: S104
     port: Annotated[
         int, typer.Option("--port", "-p", help="API server port")
     ] = 8000,
