@@ -23,7 +23,7 @@ def test_help() -> None:
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     for cmd in ("analyze", "monitor", "generate", "compare", "serve", "config-init"):
-        assert cmd in result.output, f"Command '{cmd}' missing from --help"
+        assert cmd in result.output, f"Command \'{cmd}\' missing from --help"
 
 
 def test_analyze_help() -> None:
