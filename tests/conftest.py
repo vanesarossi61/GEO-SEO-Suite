@@ -2,14 +2,15 @@
 
 from __future__ import annotations
 
-import tempfile
-from pathlib import Path
-from typing import Generator
+from typing import TYPE_CHECKING
 
 import pytest
 
+if TYPE_CHECKING:
+    from pathlib import Path
 
-@pytest.fixture()
+
+@pytest.fixture
 def sample_html() -> str:
     """Return a realistic HTML page for testing extraction and scoring."""
     return """\
@@ -17,59 +18,20 @@ def sample_html() -> str:
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Best Practices for Generative Engine Optimization in 2026</title>
-    <meta name="description" content="A comprehensive guide to GEO and SEO best practices for optimising content visibility in AI-powered search engines.">
+    <title>Best Practices for GEO in 2026</title>
+    <meta name="description" content="A guide to GEO and SEO best practices.">
     <link rel="canonical" href="https://example.com/test-page">
     <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "Article",
-        "headline": "Best Practices for Generative Engine Optimization in 2026",
-        "author": {
-            "@type": "Person",
-            "name": "Vane Rossi"
-        },
-        "datePublished": "2026-03-01",
-        "dateModified": "2026-03-10",
-        "description": "A comprehensive guide to GEO and SEO best practices.",
-        "publisher": {
-            "@type": "Organization",
-            "name": "GEO-SEO Suite"
-        }
-    }
+    {"@context":"https://schema.org","@type":"Article","headline":"GEO in 2026"}
     </script>
 </head>
 <body>
-    <nav>
-        <a href="/">Home</a>
-        <a href="/about">About</a>
-        <a href="/blog">Blog</a>
-        <a href="/contact">Contact</a>
-    </nav>
     <main>
         <article>
-            <h1>Best Practices for Generative Engine Optimization in 2026</h1>
-            <p>Generative Engine Optimization (GEO) is the practice of making web
-            content more discoverable and accurately represented by AI-powered
-            search engines and large language models.</p>
-
-            <h2>Understanding GEO vs Traditional SEO</h2>
-            <p>While traditional SEO focuses on keyword placement and backlinks,
-            GEO emphasises structured data, content clarity, and machine-readable
-            markup that LLMs can parse reliably.</p>
-
+            <h1>Best Practices for GEO in 2026</h1>
+            <p>GEO makes web content discoverable by AI search engines.</p>
             <h2>Key Strategies</h2>
-            <p>Implement schema.org JSON-LD, provide an llms.txt file, and ensure
-            your content structure follows clear hierarchical headings.</p>
-
-            <h3>Structured Data</h3>
-            <p>Use JSON-LD to describe your pages with Article, FAQ, HowTo, and
-            Organization schemas.</p>
-
-            <h3>Content Quality</h3>
-            <p>Write clear, factual content with proper citations and authoritative
-            sourcing to improve trustworthiness signals.</p>
+            <p>Use schema.org JSON-LD and provide an llms.txt file.</p>
         </article>
     </main>
 </body>
@@ -77,13 +39,13 @@ def sample_html() -> str:
 """
 
 
-@pytest.fixture()
+@pytest.fixture
 def sample_url() -> str:
     """Return a canonical test URL."""
     return "https://example.com/test-page"
 
 
-@pytest.fixture()
+@pytest.fixture
 def tmp_config_dir(tmp_path: Path) -> Path:
     """Provide a temporary directory for configuration files."""
     config_dir = tmp_path / "config"
@@ -91,7 +53,7 @@ def tmp_config_dir(tmp_path: Path) -> Path:
     return config_dir
 
 
-@pytest.fixture()
+@pytest.fixture
 def tmp_db_path(tmp_path: Path) -> Path:
     """Provide a temporary path for a SQLite database."""
     return tmp_path / "test_geo_seo.db"
