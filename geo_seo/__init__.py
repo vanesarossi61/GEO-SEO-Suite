@@ -1,0 +1,4 @@
+"""GEO-SEO Suite -- Professional GEO/SEO analysis toolkit."""
+
+__version__ = "2.0.0"
+__all__ = ["__version__"]
