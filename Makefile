@@ -1,41 +1,52 @@
-.PHONY: install dev lint format typecheck test test-cov build docker docker-up docker-down clean all
+.DEFAULT_GOAL := help
+.PHONY: help install dev lint format typecheck test test-cov build docker docker-up docker-down clean all
 
-install:
+PACKAGE   := geo_seo
+TESTS     := tests
+PYTHON    := python
+
+help: ## Show this help message
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}'
+
+install: ## Install the package (production)
 	pip install -e .
 
-dev:
+dev: ## Install the package with dev dependencies
 	pip install -e ".[dev]"
 	pre-commit install
 
-lint:
-	ruff check geo_seo/ tests/
+lint: ## Run ruff linter
+	ruff check $(PACKAGE) $(TESTS)
 
-format:
-	ruff format geo_seo/ tests/
+format: ## Run ruff formatter
+	ruff format $(PACKAGE) $(TESTS)
 
-typecheck:
-	mypy geo_seo/
+typecheck: ## Run mypy type checker
+	mypy $(PACKAGE)
 
-test:
-	pytest tests/ -v
+test: ## Run tests
+	pytest $(TESTS) -v
 
-test-cov:
-	pytest tests/ --cov=geo_seo --cov-report=html --cov-report=term-missing
+test-cov: ## Run tests with coverage report
+	pytest $(TESTS) --cov=$(PACKAGE) --cov-report=term-missing --cov-report=html --cov-report=xml
 
-build:
-	python -m build
+build: ## Build the Python package (sdist + wheel)
+	$(PYTHON) -m build
 
-docker:
-	docker build -t geo-seo-suite .
+docker: ## Build the Docker image
+	docker build -t geo-seo-suite:latest .
 
-docker-up:
+docker-up: ## Start all services with Docker Compose
 	docker compose up -d
 
-docker-down:
+docker-down: ## Stop all services
 	docker compose down
 
-clean:
-	rm -rf dist/ build/ *.egg-info .coverage htmlcov/ .mypy_cache/ .ruff_cache/ .pytest_cache/
-	find . -type d -name __pycache__ -exec rm -rf {} +
+clean: ## Remove build artefacts and caches
+	rm -rf dist/ build/ *.egg-info
+	rm -rf .mypy_cache .ruff_cache .pytest_cache
+	rm -rf htmlcov .coverage coverage.xml
+	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
+	find . -type f -name "*.pyc" -delete 2>/dev/null || true
 
-all: lint typecheck test
+all: lint typecheck test ## Run lint + typecheck + test
