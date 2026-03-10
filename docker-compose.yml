@@ -1,0 +1,35 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./config:/app/config:ro
+      - ./output:/app/output
+    environment:
+      - GEO_SEO_CONFIG=/app/config/geo-seo.yaml
+      - GEO_SEO_DB=postgresql://geoseo:geoseo@db:5432/geoseo
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: geoseo
+      POSTGRES_PASSWORD: geoseo
+      POSTGRES_DB: geoseo
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U geoseo"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  pgdata:
