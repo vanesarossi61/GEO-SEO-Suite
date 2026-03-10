@@ -2,18 +2,17 @@
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-[tool.hatch.build.targets.wheel]
-packages = ["geo_seo"]
-
 [project]
 name = "geo-seo-suite"
 version = "2.0.0"
-description = "Suite profesional de optimización GEO/SEO para maximizar visibilidad en LLMs y motores de búsqueda"
+description = "Professional GEO/SEO analysis suite for generative engine optimization"
 readme = "README.md"
-license = "MIT"
 requires-python = ">=3.11"
-authors = [{name = "Vane Rossi", email = "vanesarossi61@gmail.com"}]
-keywords = ["geo", "seo", "llm", "optimization", "citability", "ai-search"]
+license = {text = "MIT"}
+authors = [
+    {name = "Vane Rossi", email = "vanesarossi61@gmail.com"},
+]
+keywords = ["seo", "geo", "generative-engine-optimization", "llm", "search"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -21,8 +20,8 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Topic :: Internet :: WWW/HTTP :: Indexing/Search",
+    "Typing :: Typed",
 ]
-
 dependencies = [
     "typer[all]>=0.9.0",
     "pydantic>=2.0",
@@ -34,7 +33,6 @@ dependencies = [
     "pyyaml>=6.0",
     "rich>=13.0",
     "aiosqlite>=0.19",
-    "lxml>=4.9",
 ]
 
 [project.optional-dependencies]
@@ -45,10 +43,7 @@ dev = [
     "ruff>=0.1",
     "mypy>=1.5",
     "pre-commit>=3.4",
-    "respx>=0.20",
 ]
-playwright = ["playwright>=1.40"]
-api = ["fastapi>=0.104", "uvicorn[standard]>=0.24"]
 
 [project.scripts]
 geo-seo = "geo_seo.cli:app"
@@ -57,34 +52,75 @@ geo-seo = "geo_seo.cli:app"
 Homepage = "https://github.com/vanesarossi61/geo-seo-suite"
 Repository = "https://github.com/vanesarossi61/geo-seo-suite"
 Issues = "https://github.com/vanesarossi61/geo-seo-suite/issues"
+Documentation = "https://github.com/vanesarossi61/geo-seo-suite#readme"
 
+# ---------------------------------------------------------------------------
+# Ruff
+# ---------------------------------------------------------------------------
 [tool.ruff]
 line-length = 100
 target-version = "py311"
 
 [tool.ruff.lint]
 select = [
-    "E", "F", "W", "I", "N", "UP", "ANN", "S", "B", "A",
-    "COM", "C4", "ISC", "ICN", "PIE", "PT", "RSE", "RET",
-    "SLF", "SIM", "TID", "TCH", "ARG", "PTH", "PL", "TRY",
-    "FLY", "PERF", "RUF",
+    "E",    # pycodestyle errors
+    "F",    # pyflakes
+    "W",    # pycodestyle warnings
+    "I",    # isort
+    "N",    # pep8-naming
+    "UP",   # pyupgrade
+    "ANN",  # flake8-annotations
+    "S",    # flake8-bandit
+    "B",    # flake8-bugbear
+    "A",    # flake8-builtins
+    "COM",  # flake8-commas
+    "C4",   # flake8-comprehensions
+    "ISC",  # flake8-implicit-str-concat
+    "ICN",  # flake8-import-conventions
+    "PIE",  # flake8-pie
+    "PT",   # flake8-pytest-style
+    "RSE",  # flake8-raise
+    "RET",  # flake8-return
+    "SLF",  # flake8-self
+    "SIM",  # flake8-simplify
+    "TID",  # flake8-tidy-imports
+    "TCH",  # flake8-type-checking
+    "ARG",  # flake8-unused-arguments
+    "PTH",  # flake8-use-pathlib
+    "PL",   # pylint
+    "TRY",  # tryceratops
+    "FLY",  # flynt
+    "PERF", # perflint
+    "RUF",  # ruff-specific rules
 ]
-ignore = ["ANN101", "ANN102", "ANN401", "TRY003", "COM812", "ISC001"]
+ignore = [
+    "COM812",  # trailing comma (conflicts with formatter)
+    "ISC001",  # implicit string concatenation (conflicts with formatter)
+]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**" = ["S101", "ANN", "ARG", "PLR2004"]
+"tests/**/*.py" = ["S101", "ANN", "ARG", "PLR2004"]
 
+# ---------------------------------------------------------------------------
+# Mypy
+# ---------------------------------------------------------------------------
 [tool.mypy]
-python_version = "3.11"
 strict = true
+python_version = "3.11"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
 
 [[tool.mypy.overrides]]
-module = ["trafilatura.*", "bs4.*"]
+module = [
+    "trafilatura.*",
+    "bs4.*",
+]
 ignore_missing_imports = true
 
+# ---------------------------------------------------------------------------
+# Pytest
+# ---------------------------------------------------------------------------
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"
@@ -93,3 +129,24 @@ markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
     "integration: marks integration tests",
 ]
+
+# ---------------------------------------------------------------------------
+# Coverage
+# ---------------------------------------------------------------------------
+[tool.coverage.run]
+source = ["geo_seo"]
+omit = ["tests/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+]
+
+# ---------------------------------------------------------------------------
+# Hatch build
+# ---------------------------------------------------------------------------
+[tool.hatch.build.targets.wheel]
+packages = ["geo_seo"]
