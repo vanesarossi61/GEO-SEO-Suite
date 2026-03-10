@@ -5,12 +5,11 @@ repos:
       - id: ruff
         args: [--fix]
       - id: ruff-format
-
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: v1.8.0
     hooks:
       - id: mypy
-        additional_dependencies:
-          - pydantic>=2.0
-          - typer>=0.9.0
-          - types-PyYAML
+        additional_dependencies: [typer>=0.9.0, pydantic>=2.0, pydantic-settings>=2.0, rich>=13.0, types-PyYAML]
+        args: [--strict]
+        pass_filenames: false
+        entry: mypy geo_seo
